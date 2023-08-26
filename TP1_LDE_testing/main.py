@@ -35,14 +35,27 @@ class ListaDobleEnlazada:
         self.size += 1
 
     def insertar(self, item, posicion=None):
-        if posicion == None or posicion >= self.size or posicion == -1:
+        if posicion == None or posicion >= self.size:
             self.agregar_al_final(item)
-        elif posicion == 0 or self.estaVacia():
+        elif posicion == 0 or self.estaVacia() or posicion*-1 >= self.size:
             self.agregar_al_inicio(item)
+        elif posicion < 0:
+            posicion *= -1
+            nuevo_nodo = Nodo(item)
+            nodo_siguiente = self.cola
+            for _ in range(posicion - 1):
+                nodo_siguiente = nodo_siguiente.anterior
+
+            nodo_anterior = nodo_siguiente.anterior
+            nuevo_nodo.siguiente = nodo_siguiente
+            nuevo_nodo.anterior = nodo_anterior
+            nodo_anterior.siguiente = nuevo_nodo
+            nodo_siguiente.anterior = nuevo_nodo
+            self.size += 1
         else:
             nuevo_nodo = Nodo(item)
             nodo_anterior = self.cabeza
-            for _ in range(posicion - 1):
+            for _ in range(1,posicion):
                 nodo_anterior = nodo_anterior.siguiente
 
             nodo_siguiente = nodo_anterior.siguiente  
@@ -50,16 +63,6 @@ class ListaDobleEnlazada:
             nuevo_nodo.anterior = nodo_anterior
             nodo_anterior.siguiente = nuevo_nodo
             nodo_siguiente.anterior = nuevo_nodo
-            # Verificación de la conexión del nodo siguiente
-            if nuevo_nodo.siguiente is not None:
-                if nuevo_nodo.siguiente.anterior != nuevo_nodo:
-                    print("Error: nodo siguiente no conectado correctamente")
-            
-            # Verificación de la conexión del nodo anterior
-            if nodo_siguiente is not None:
-                if nodo_siguiente.anterior != nuevo_nodo:
-                    print("Error: nodo anterior no conectado correctamente")
-
             self.size += 1
     
     def concatenar(self,lista):
@@ -67,8 +70,8 @@ class ListaDobleEnlazada:
         self.cola.siguiente = nodo_lista
         nodo_lista.anterior = self.cola
         self.size += lista.tamano()
-    def __str__(self):
-        return str(self.size)
+    def tamano(self):
+        return self.size
     
     def mostrar(self):
         string = ""
@@ -86,38 +89,3 @@ class ListaDobleEnlazada:
             copia_lista.agregar_al_final(actual.dato)
             actual = actual.siguiente
         return copia_lista
-
-lista = ListaDobleEnlazada()
-
-lista.agregar_al_final(1)
-lista.agregar_al_final(2)
-lista.agregar_al_final(3)
-lista.agregar_al_final(4)
-lista.agregar_al_final(5)
-lista.insertar(8)
-lista.insertar(6,3)
-lista.insertar(8,20)
-lista.insertar(8,1)
-lista.agregar_al_inicio(20)
-
-print("Tamaño lista: ",lista.tamano())
-print(lista.mostrar())
-
-lista2 = ListaDobleEnlazada()
-lista2.agregar_al_final(50)
-lista2.agregar_al_final(100)
-lista2.agregar_al_final(23)
-lista2.agregar_al_final(59)
-
-print("Tamaño lista2: ",lista2.tamano())
-print("Lista2: ",lista2.mostrar())
-
-lista.concatenar(lista2)
-
-print("tamaño lista ",lista.tamano())
-print("Lista concatenada ",lista.mostrar())
-
-
-lista.insertar(200,12)
-print("tamaño lista ",lista.tamano())
-print("Lista concatenada ",lista.mostrar())
