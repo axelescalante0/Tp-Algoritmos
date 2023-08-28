@@ -141,6 +141,24 @@ class ListaDobleEnlazada:
             actual = actual.siguiente
         return copia_lista
 
+    def ordenar(self):
+        if self.cabeza is None:
+            return
+            
+        nodo_actual = self.cabeza
+        while nodo_actual:
+            min_nodo = nodo_actual
+            nodo_temp = nodo_actual.siguiente
+            while nodo_temp:
+                if nodo_temp.dato < min_nodo.dato:
+                    min_nodo = nodo_temp
+                nodo_temp = nodo_temp.siguiente
+            
+            if min_nodo != nodo_actual:
+                nodo_actual.dato, min_nodo.dato = min_nodo.dato, nodo_actual.dato
+            
+            nodo_actual = nodo_actual.siguiente
+
     def __len__(self):
         return self.tamanio
 
