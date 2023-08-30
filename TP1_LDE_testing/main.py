@@ -142,7 +142,7 @@ class ListaDobleEnlazada:
         return copia_lista
 
     def ordenar(self):
-        if self.cabeza is None:
+        if self.cabeza == None:
             return
             
         nodo_actual = self.cabeza
@@ -169,10 +169,7 @@ class ListaDobleEnlazada:
             lista_concatenada.agregar_al_final(nodo_lista_1.dato)
             nodo_lista_1 = nodo_lista_1.siguiente
         
-        nodo_lista_2 = lista.cabeza
-        while nodo_lista_2 != None:
-            lista_concatenada.agregar_al_final(nodo_lista_2.dato)
-            nodo_lista_2 = nodo_lista_2.siguiente
+        lista_concatenada.concatenar(lista)
         return lista_concatenada
 
     def __iter__(self):
