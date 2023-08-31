@@ -159,6 +159,13 @@ class ListaDobleEnlazada:
             
             nodo_actual = nodo_actual.siguiente
 
+    def ordenar_auxiliar(self):
+        
+        pass
+
+    def quick_sort(self):
+        pass
+
     def __len__(self):
         return self.tamanio
 
