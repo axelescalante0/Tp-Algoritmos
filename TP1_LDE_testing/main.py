@@ -142,29 +142,89 @@ class ListaDobleEnlazada:
         return copia_lista
 
     def ordenar(self):
-        if self.cabeza == None:
-            return
-            
-        nodo_actual = self.cabeza
-        while nodo_actual:
-            min_nodo = nodo_actual
-            nodo_temp = nodo_actual.siguiente
-            while nodo_temp:
-                if nodo_temp.dato < min_nodo.dato:
-                    min_nodo = nodo_temp
-                nodo_temp = nodo_temp.siguiente
-            
-            if min_nodo != nodo_actual:
-                nodo_actual.dato, min_nodo.dato = min_nodo.dato, nodo_actual.dato
-            
-            nodo_actual = nodo_actual.siguiente
+        self.ordenar_auxiliar(self.cabeza,0,self.tamanio-1)
 
-    def ordenar_auxiliar(self):
+    def ordenar_auxiliar(self,cabeza,primero,ultimo):
+        if primero < ultimo:
+
+            puntoDivision = self.quick_sort(cabeza,primero,ultimo)
+
+            self.ordenar_auxiliar(cabeza,primero,puntoDivision-1)
+            self.ordenar_auxiliar(cabeza,puntoDivision+1,ultimo)
+
+    def quick_sort(self,cabeza,primero,ultimo):
         
-        pass
+        if ultimo < self.tamanio-1 and primero == 0:
+            nodo_Der = self.cola
+            for _ in range(ultimo):
+                nodo_Der = nodo_Der.anterior
 
-    def quick_sort(self):
-        pass
+            nodo_pivote = cabeza
+            nodo_Izq = cabeza.siguiente        
+            print("dentro de cambiar cola")
+        elif primero > 0 and ultimo == self.tamanio-1:
+            nodo_pivote = self.cabeza
+            for _ in range(primero):
+                nodo_pivote = nodo_pivote.siguiente
+
+            nodo_Izq = nodo_pivote.siguiente
+
+            nodo_Der = self.cola         
+            print("dentro de cambiar cabeza")
+        else:
+            nodo_pivote = cabeza
+            # print("Nodo pivote ",nodo_pivote.dato)
+            nodo_Izq = cabeza.siguiente
+            nodo_Der = self.cola
+            # print("Nodo izq ",nodo_Izq.dato)
+            # print("Nodo der ",nodo_Der.dato)
+
+        # else:
+        #     if ultimo < self.tamanio-1:
+        #         nodo_Der = self.cola
+        #         for _ in range(ultimo):
+        #             nodo_Der = nodo_Der.anterior
+        #         nodo_pivote = cabeza
+        #         nodo_Izq = cabeza.siguiente
+        #     else:
+        #         nodo_Izq = cabeza.siguiente
+        #         for _ in range(primero):
+        #             nodo_Izq = nodo_Izq.siguiente
+        #         nodo_pivote = cabeza
+        #         nodo_Der = self.cola
+
+        marcaIzq = primero + 1
+        marcaDer = ultimo
+
+        hecho = False
+        while not hecho:
+
+            while marcaIzq <= marcaDer and nodo_Izq.dato <= nodo_pivote.dato:
+                nodo_Izq = nodo_Izq.siguiente
+                marcaIzq += 1
+                # print("Nodo izq ",nodo_Izq.dato)
+            while nodo_Der.dato >= nodo_pivote.dato and marcaDer >= marcaIzq:
+                nodo_Der = nodo_Der.anterior
+                marcaDer -=1
+                # print("Nodo der ",nodo_Der.dato)
+            if marcaDer < marcaIzq:
+                hecho = True
+            else:
+                dato_Temp = nodo_Izq.dato
+                # print("Nodo izq ",nodo_Izq.dato)
+                # print("Nodo der ",nodo_Der.dato)
+                nodo_Izq.dato = nodo_Der.dato
+                # print("Nodo izq ",nodo_Izq.dato)
+                nodo_Der.dato = dato_Temp
+                # print("Nodo der ",nodo_Der.dato)
+        dato_Temp = nodo_pivote.dato
+        # print("Nodo pivote ",nodo_pivote.dato)
+        nodo_pivote.dato = nodo_Der.dato
+        # print("Nodo pivote ",nodo_pivote.dato)
+        nodo_Der.dato = dato_Temp
+        
+
+        return marcaDer
 
     def __len__(self):
         return self.tamanio
@@ -184,4 +244,26 @@ class ListaDobleEnlazada:
             while nodo != None:
                 yield(nodo.dato)
                 nodo= nodo.siguiente
+    def __str__(self):
+        string = ""
+        nodo = self.cabeza
+        while nodo != None:
+            string += str(nodo.dato)
+            string += " "
+            nodo = nodo.siguiente
+        return string
 
+
+lista = ListaDobleEnlazada()
+lista.agregar_al_final(54)
+lista.agregar_al_final(26)
+lista.agregar_al_final(93)
+lista.agregar_al_final(17)
+lista.agregar_al_final(77)
+lista.agregar_al_final(31)
+lista.agregar_al_final(44)
+lista.agregar_al_final(55)
+lista.agregar_al_final(20)
+print(lista)
+lista.ordenar()
+print(lista)
