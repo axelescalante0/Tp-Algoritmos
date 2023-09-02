@@ -142,56 +142,51 @@ class ListaDobleEnlazada:
         return copia_lista
 
     def ordenar(self):
-        self.ordenar_auxiliar(self.cabeza,0,self.tamanio-1)
-
-    def ordenar_auxiliar(self,cabeza,primero,ultimo):
-        if primero < ultimo:
-
-            puntoDivision = self.quick_sort(cabeza,primero,ultimo)
-
-            self.ordenar_auxiliar(cabeza,primero,puntoDivision-1)
-            self.ordenar_auxiliar(cabeza,puntoDivision+1,ultimo)
-
-    def quick_sort(self,cabeza,primero,ultimo):
-        
-        if ultimo < self.tamanio-1 and primero == 0:
-            nodo_Der = self.cola
-            for _ in range(ultimo):
-                nodo_Der = nodo_Der.anterior
-
-            nodo_pivote = cabeza
-            nodo_Izq = cabeza.siguiente        
-            print("dentro de cambiar cola")
-        elif primero > 0 and ultimo == self.tamanio-1:
-            nodo_pivote = self.cabeza
-            for _ in range(primero):
-                nodo_pivote = nodo_pivote.siguiente
-
-            nodo_Izq = nodo_pivote.siguiente
-
-            nodo_Der = self.cola         
-            print("dentro de cambiar cabeza")
+        # Primera llamada a otro metodo, pasandole la posicion 0 que será la cabeza del nodo
+        # y el final que sería la cola
+        if not self.estaVacia():
+            self.ordenar_auxiliar(0,self.tamanio-1)
         else:
-            nodo_pivote = cabeza
-            # print("Nodo pivote ",nodo_pivote.dato)
-            nodo_Izq = cabeza.siguiente
-            nodo_Der = self.cola
-            # print("Nodo izq ",nodo_Izq.dato)
-            # print("Nodo der ",nodo_Der.dato)
+            raise RuntimeError("Lista vacía") 
 
-        # else:
-        #     if ultimo < self.tamanio-1:
-        #         nodo_Der = self.cola
-        #         for _ in range(ultimo):
-        #             nodo_Der = nodo_Der.anterior
-        #         nodo_pivote = cabeza
-        #         nodo_Izq = cabeza.siguiente
-        #     else:
-        #         nodo_Izq = cabeza.siguiente
-        #         for _ in range(primero):
-        #             nodo_Izq = nodo_Izq.siguiente
-        #         nodo_pivote = cabeza
-        #         nodo_Der = self.cola
+    def ordenar_auxiliar(self,primero,ultimo):
+        if primero < ultimo:
+            # Lo segundo es llamar a la función quick_sort que va a ordenar y retornar
+            # un punto para dividir la lista
+            puntoDivision = self.quick_sort(primero,ultimo)
+            # Luego de dividir la lista, se llama a si misma para repetir el proceso de puntoDivision pero en
+            # la primera mitad
+            self.ordenar_auxiliar(primero,puntoDivision-1)
+            # Por ultimo, se llama de nuevo pero se invierten los valores para que ordene la segunda mitad
+            self.ordenar_auxiliar(puntoDivision+1,ultimo)
+
+    def quick_sort(self,primero,ultimo):
+        if primero == 0 and ultimo == self.tamanio-1:
+            nodo_pivote = self.cabeza
+            nodo_Izq = self.cabeza.siguiente
+            nodo_Der = self.cola
+        else:
+            if primero < (self.tamanio/2):
+                nodo_pivote = self.cabeza
+                for _ in range(primero):
+                    nodo_pivote = nodo_pivote.siguiente
+                nodo_Izq = nodo_pivote.siguiente
+
+            else:
+                nodo_pivote = self.cola
+                for _ in range(((self.tamanio - 1) - primero)):
+                    nodo_pivote = nodo_pivote.anterior
+                nodo_Izq = nodo_pivote.siguiente
+
+            if ultimo > (self.tamanio/2):
+                nodo_Der = self.cola
+                for _ in range(((self.tamanio - 1) - ultimo)):
+                    nodo_Der = nodo_Der.anterior
+
+            else:
+                nodo_Der = self.cabeza
+                for _ in range(ultimo):
+                    nodo_Der = nodo_Der.siguiente
 
         marcaIzq = primero + 1
         marcaDer = ultimo
@@ -202,27 +197,21 @@ class ListaDobleEnlazada:
             while marcaIzq <= marcaDer and nodo_Izq.dato <= nodo_pivote.dato:
                 nodo_Izq = nodo_Izq.siguiente
                 marcaIzq += 1
-                # print("Nodo izq ",nodo_Izq.dato)
             while nodo_Der.dato >= nodo_pivote.dato and marcaDer >= marcaIzq:
                 nodo_Der = nodo_Der.anterior
                 marcaDer -=1
-                # print("Nodo der ",nodo_Der.dato)
+
             if marcaDer < marcaIzq:
                 hecho = True
+
             else:
                 dato_Temp = nodo_Izq.dato
-                # print("Nodo izq ",nodo_Izq.dato)
-                # print("Nodo der ",nodo_Der.dato)
                 nodo_Izq.dato = nodo_Der.dato
-                # print("Nodo izq ",nodo_Izq.dato)
                 nodo_Der.dato = dato_Temp
-                # print("Nodo der ",nodo_Der.dato)
+
         dato_Temp = nodo_pivote.dato
-        # print("Nodo pivote ",nodo_pivote.dato)
         nodo_pivote.dato = nodo_Der.dato
-        # print("Nodo pivote ",nodo_pivote.dato)
         nodo_Der.dato = dato_Temp
-        
 
         return marcaDer
 
@@ -244,26 +233,11 @@ class ListaDobleEnlazada:
             while nodo != None:
                 yield(nodo.dato)
                 nodo= nodo.siguiente
-    def __str__(self):
-        string = ""
-        nodo = self.cabeza
-        while nodo != None:
-            string += str(nodo.dato)
-            string += " "
-            nodo = nodo.siguiente
-        return string
-
-
-lista = ListaDobleEnlazada()
-lista.agregar_al_final(54)
-lista.agregar_al_final(26)
-lista.agregar_al_final(93)
-lista.agregar_al_final(17)
-lista.agregar_al_final(77)
-lista.agregar_al_final(31)
-lista.agregar_al_final(44)
-lista.agregar_al_final(55)
-lista.agregar_al_final(20)
-print(lista)
-lista.ordenar()
-print(lista)
+    # def __str__(self):
+    #     string = ""
+    #     nodo = self.cabeza
+    #     while nodo != None:
+    #         string += str(nodo.dato)
+    #         string += " "
+    #         nodo = nodo.siguiente
+    #     return string
