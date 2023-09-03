@@ -153,14 +153,14 @@ class ListaDobleEnlazada:
         if primero < ultimo:
             # Lo segundo es llamar a la función quick_sort que va a ordenar y retornar
             # un punto para dividir la lista
-            puntoDivision = self.quick_sort(primero,ultimo)
+            puntoDivision = self.particion(primero,ultimo)
             # Luego de dividir la lista, se llama a si misma para repetir el proceso de puntoDivision pero en
             # la primera mitad
             self.ordenar_auxiliar(primero,puntoDivision-1)
             # Por ultimo, se llama de nuevo pero se invierten los valores para que ordene la segunda mitad
             self.ordenar_auxiliar(puntoDivision+1,ultimo)
 
-    def quick_sort(self,primero,ultimo):
+    def particion(self,primero,ultimo):
         if primero == 0 and ultimo == self.tamanio-1:
             nodo_pivote = self.cabeza
             nodo_Izq = self.cabeza.siguiente
@@ -171,7 +171,6 @@ class ListaDobleEnlazada:
                 for _ in range(primero):
                     nodo_pivote = nodo_pivote.siguiente
                 nodo_Izq = nodo_pivote.siguiente
-
             else:
                 nodo_pivote = self.cola
                 for _ in range(((self.tamanio - 1) - primero)):
@@ -182,7 +181,6 @@ class ListaDobleEnlazada:
                 nodo_Der = self.cola
                 for _ in range(((self.tamanio - 1) - ultimo)):
                     nodo_Der = nodo_Der.anterior
-
             else:
                 nodo_Der = self.cabeza
                 for _ in range(ultimo):
