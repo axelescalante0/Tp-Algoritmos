@@ -12,7 +12,7 @@ def medir_tiempo_quick_sort(lista):
     fin = timeit.default_timer()
     return fin - inicio
 
-tamanios = [10, 100,250,500,750, 1000,1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500,8000,8500,9000,9500,10000]  # Ajusta estos tamaños según tus necesidades
+tamanios = [10, 100,250,500,750, 1000,1500,2000,2500,3000,3500,4000,4500,5000,5500,6000,6500,7000,7500,8000,8500,9000,9500,10000]
 tiempos = []
 
 for n in tamanios:
@@ -24,7 +24,7 @@ for n in tamanios:
     tiempo_ejecucion = medir_tiempo_quick_sort(lista)
     tiempos.append(tiempo_ejecucion)
 
-plt.plot(tamanios, tiempos, marker='o', linestyle='-')
+plt.plot(tamanios, tiempos, marker='o', linestyle='°')
 plt.xlabel('Tamaño de la Lista')
 plt.ylabel('Tiempo de Ejecución (segundos)')
 plt.title('Medición de Tiempos de Ejecución del Método QuickSort')
