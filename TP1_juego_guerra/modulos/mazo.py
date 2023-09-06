@@ -16,8 +16,7 @@ class Carta:
 
 
 class Mazo:
-    def __init__(self, cantidad=None):
-        self.cantidad = cantidad
+    def __init__(self):
         self.mazo = ListaDobleEnlazada()
         self.guerra = False
 
@@ -30,8 +29,11 @@ class Mazo:
 
     def mezclar(self):
         self.generar_mazo()
+#                           IMPLEMENTAR OTRA FORMA DE MEZCLAR
+#------------------------------------------------------------------------------------
         mazo_1 = ListaDobleEnlazada()
         mazo_2 = ListaDobleEnlazada()
+
         for i, carta in enumerate(self.mazo):
             if i < 26:
                 mazo_1.agregar_al_final(carta)
@@ -44,12 +46,13 @@ class Mazo:
             mazo_2.insertar(carta, randint(0, 51))
 
         self.mazo = mazo_2.copiar()
-
+        self.generar_mazo()
+#------------------------------------------------------------------------------------
     def poner_arriba(self, carta):
-        self.mazo.agregar_al_inicio(carta)
+       self.mazo.agregar_al_inicio(carta)
 
     def poner_abajo(self, carta):
-        self.mazo.agregar_al_final(carta)
+        self.mazo.agregar_al_final(carta) 
 
     def sacar_arriba(self):
         carta = self.mazo.extraer(0)
@@ -94,7 +97,7 @@ class JuegoGuerra:
                 self.jugador_1.poner_abajo(carta_1)
                 self.jugador_1.poner_abajo(carta_2)
             else:
-                for _ in range(len(self.mazo_guerra.mazo)):
+                for _ in self.mazo_guerra.mazo:
                     self.jugador_1.poner_abajo(self.mazo_guerra.sacar_arriba())
 
                 self.jugador_1.poner_abajo(carta_1)
@@ -107,7 +110,7 @@ class JuegoGuerra:
                 self.jugador_2.poner_abajo(carta_1)
                 self.jugador_2.poner_abajo(carta_2)
             else:
-                for _ in range(len(self.mazo_guerra.mazo)):
+                for _ in self.mazo_guerra.mazo:
                     self.jugador_1.poner_abajo(self.mazo_guerra.sacar_arriba())
 
                 self.jugador_2.poner_abajo(carta_1)
@@ -121,8 +124,10 @@ class JuegoGuerra:
 
         self.mazo.mezclar()
         self.repartir()
+
         string_cartas = ""
         while self.finalizado:
+
             if  self.jugador_1.mazo.tamanio == 0 or self.jugador_2.mazo.tamanio == 0:
                 break
 
