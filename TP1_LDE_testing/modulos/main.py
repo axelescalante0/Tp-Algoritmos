@@ -99,7 +99,7 @@ class ListaDobleEnlazada:
     def extraer(self,posicion = None):
         if self.tamanio == 0:
             raise RuntimeError("Lista vacía")
-        elif posicion == None and self.tamanio == 1:
+        elif posicion == None and self.tamanio == 1 or posicion == 0 and self.tamanio == 1:
             dato = self.cabeza.dato
             self.cabeza = self.cola = None
             self.tamanio = 0
@@ -128,6 +128,7 @@ class ListaDobleEnlazada:
             # conecto los nodos
             #nodo_anterior.siguiente = nodo_siguiente
             #nodo_siguiente.anterior = nodo_anterior
+            
             nodo_extraer.anterior.siguiente = nodo_extraer.siguiente
             nodo_extraer.siguiente.anterior = nodo_extraer.anterior
             self.tamanio -= 1
@@ -153,17 +154,15 @@ class ListaDobleEnlazada:
         return self.tamanio
 
     def copiar(self):
-        if not self.estaVacia(): 
-            copia_lista = ListaDobleEnlazada()
-            actual = self.cabeza
+        copia_lista = ListaDobleEnlazada()
+        actual = self.cabeza
 
-            while actual != None:
-                copia_lista.agregar_al_final(actual.dato)
-                actual = actual.siguiente
+        while actual != None:
+            copia_lista.agregar_al_final(actual.dato)
+            actual = actual.siguiente
 
-            return copia_lista
-        else:
-            raise RuntimeError("Una de las listas vacía")
+        return copia_lista
+
 
     def ordenar(self):
         # Primera llamada a otro metodo, pasandole la posicion 0 que será la cabeza del nodo
