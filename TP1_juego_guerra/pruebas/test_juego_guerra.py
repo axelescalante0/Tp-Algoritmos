@@ -1,12 +1,4 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Aug 21 11:23:53 2022
-
-@author: je_su
-"""
-
-
-from modulos.mazo import Mazo, Carta
+from TP1_juego_guerra.modulos.mazo import Mazo, Carta
 import unittest
 
 
