@@ -77,21 +77,24 @@ class ListaDobleEnlazada:
             self.tamanio += 1
 
     def concatenar(self,lista):
-        # Se copia la lista que se pasa por parámetro asi esta no se modifica
-        lista_2_copia = lista.copiar()
-        # Se toma la cabeza de la lista copiada
-        cabeza_lista_2 = lista_2_copia.cabeza
-        # Luego la cola de la lista actual
-        ultimo_nodo_lista_1 = self.cola
+        if self.tamanio > 0 and len(lista) > 0:
+            # Se copia la lista que se pasa por parámetro asi esta no se modifica
+            lista_2_copia = lista.copiar()
+            # Se toma la cabeza de la lista copiada
+            cabeza_lista_2 = lista_2_copia.cabeza
+            # Luego la cola de la lista actual
+            ultimo_nodo_lista_1 = self.cola
 
-        # Posteriormente se conecta la cola de la lista actual con la cabeza de la lista copiada
-        # y se actualiza la cola de la lista actual para que apunte a la cola de la lista copiada
-        ultimo_nodo_lista_1.siguiente = cabeza_lista_2
-        cabeza_lista_2.anterior = ultimo_nodo_lista_1
-        self.cola = lista_2_copia.cola
+            # Posteriormente se conecta la cola de la lista actual con la cabeza de la lista copiada
+            # y se actualiza la cola de la lista actual para que apunte a la cola de la lista copiada
+            ultimo_nodo_lista_1.siguiente = cabeza_lista_2
+            cabeza_lista_2.anterior = ultimo_nodo_lista_1
+            self.cola = lista_2_copia.cola
 
-        # Por otro lado, se suma el tamanio de la lista copiada a la actual
-        self.tamanio += len(lista)
+            # Por otro lado, se suma el tamanio de la lista copiada a la actual
+            self.tamanio += len(lista)
+        else:
+            raise RuntimeError("Una de las listas vacía")
 
     def extraer(self,posicion = None):
         if self.tamanio == 0:
@@ -132,29 +135,35 @@ class ListaDobleEnlazada:
         return dato
 
     def invertir(self):
-        nodo = self.cabeza
+        if self.tamanio == 0:
+            raise RuntimeError("Lista vacía")
+        else:
+            nodo = self.cabeza
 
-        for i in range(self.tamanio):
-            item = nodo.dato
-            self.agregar_al_inicio(item)
-            nodo = nodo.siguiente
-            self.extraer(i+1)
+            for i in range(self.tamanio):
+                item = nodo.dato
+                self.agregar_al_inicio(item)
+                nodo = nodo.siguiente
+                self.extraer(i+1)
 
-        # for _ in range(i):
-        #     self.extraer()
+            # for _ in range(i):
+            #     self.extraer()
 
     def tamano(self):
         return self.tamanio
 
     def copiar(self):
-        copia_lista = ListaDobleEnlazada()
-        actual = self.cabeza
+        if not self.estaVacia(): 
+            copia_lista = ListaDobleEnlazada()
+            actual = self.cabeza
 
-        while actual != None:
-            copia_lista.agregar_al_final(actual.dato)
-            actual = actual.siguiente
+            while actual != None:
+                copia_lista.agregar_al_final(actual.dato)
+                actual = actual.siguiente
 
-        return copia_lista
+            return copia_lista
+        else:
+            raise RuntimeError("Una de las listas vacía")
 
     def ordenar(self):
         # Primera llamada a otro metodo, pasandole la posicion 0 que será la cabeza del nodo
@@ -232,21 +241,24 @@ class ListaDobleEnlazada:
         return self.tamanio
 
     def __add__(self,lista):
-        lista_concatenada = self.copiar()
-        # nodo_lista_1 = self.cabeza
+        if self.tamanio > 0 and len(lista) > 0: 
+            lista_concatenada = self.copiar()
+            # nodo_lista_1 = self.cabeza
 
-        # while nodo_lista_1 != None:
-        #     lista_concatenada.agregar_al_final(nodo_lista_1.dato)
-        #     nodo_lista_1 = nodo_lista_1.siguiente
+            # while nodo_lista_1 != None:
+            #     lista_concatenada.agregar_al_final(nodo_lista_1.dato)
+            #     nodo_lista_1 = nodo_lista_1.siguiente
 
-        lista_concatenada.concatenar(lista)
+            lista_concatenada.concatenar(lista)
 
-        return lista_concatenada
+            return lista_concatenada
+        else:
+            raise RuntimeError("Una de las listas vacía")
 
     def __iter__(self):
             nodo= self.cabeza
             while nodo != None:
-                yield(nodo.dato)
+                yield nodo.dato
                 nodo= nodo.siguiente
 
     def __str__(self):
