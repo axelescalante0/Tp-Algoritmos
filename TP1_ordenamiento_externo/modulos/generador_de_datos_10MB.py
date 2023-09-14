@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from random import randint
 import os
 
@@ -7,13 +6,13 @@ def crear_archivo_de_datos(nombre):
     N = 5*f
     cifras = 20
     tam_bloque = f # 1 M de valores por bloque a escribir
-    
+   
     print('Cantidad de valores a escribir:', N)
-    
+   
     # truncar archivo si existe
     with open(nombre, 'w') as archivo:
         pass
-    
+   
     # escribir datos
     N_restantes = N
     while N_restantes > 0:
@@ -30,12 +29,50 @@ def crear_archivo_de_datos(nombre):
                   for i in range(t)]        
         with open(nombre, 'a+') as archivo:
             archivo.writelines(bloque)
-            
+           
 crear_archivo_de_datos('datos.txt')
+
+def ordenamientoRapido(unaLista):
+   ordenamientoRapidoAuxiliar(unaLista,0,len(unaLista)-1)
+
+def ordenamientoRapidoAuxiliar(unaLista,primero,ultimo):
+   if primero<ultimo:
+
+       puntoDivision = particion(unaLista,primero,ultimo)
+
+       ordenamientoRapidoAuxiliar(unaLista,primero,puntoDivision-1)
+       ordenamientoRapidoAuxiliar(unaLista,puntoDivision+1,ultimo)
+
+def particion(unaLista,primero,ultimo):
+   valorPivote = unaLista[primero]
+
+   marcaIzq = primero+1
+   marcaDer = ultimo
+
+   hecho = False
+   while not hecho:
+
+       while marcaIzq <= marcaDer and unaLista[marcaIzq] <= valorPivote:
+           marcaIzq = marcaIzq + 1
+
+       while unaLista[marcaDer] >= valorPivote and marcaDer >= marcaIzq:
+           marcaDer = marcaDer -1
+
+       if marcaDer < marcaIzq:
+           hecho = True
+       else:
+           temp = unaLista[marcaIzq]
+           unaLista[marcaIzq] = unaLista[marcaDer]
+           unaLista[marcaDer] = temp
+
+   temp = unaLista[primero]
+   unaLista[primero] = unaLista[marcaDer]
+   unaLista[marcaDer] = temp
+
+   return marcaDer
 
 def ordenamiento_por_mezcla(una_lista):
     # Implementa tu función de ordenamiento por mezcla aquí
-
     if len(una_lista) > 1:
         mitad = len(una_lista) // 2
         mitad_izquierda = una_lista[:mitad]
@@ -66,49 +103,51 @@ def ordenamiento_por_mezcla(una_lista):
             j = j + 1
             k = k + 1
 
-def combinar_archivos_ordenados(lista_archivos, archivo_salida):
-    # Combina los archivos ordenados en uno solo
-    # lista_archivos es una lista de nombres de archivos ordenados
-    # archivo_salida es el nombre del archivo de salida
+def merge_blocks(input_files, output_file):
+    # Abre los archivos de entrada de los bloques
+    file_handles = [open(file, 'r') for file in input_files]
+    lines = [file.readline().strip() for file in file_handles]
 
-    # Abre los archivos de entrada y el archivo de salida
-    archivos_entrada = [open(archivo, 'r') for archivo in lista_archivos]
-    salida = open(archivo_salida, 'w')
+    while any(lines):
+        # Convierte las líneas en números enteros y omite las líneas vacías
+        numbers = [int(line) for line in lines if line]
 
-    # Lee la primera línea de cada archivo
-    lineas = [archivo.readline().strip() for archivo in archivos_entrada]
+        # Si no quedan números, termina
+        if not numbers:
+            break
 
-    while any(lineas):
-        # Encuentra el mínimo entre las líneas
-        linea_minima = min(lineas)
-        salida.write(linea_minima + '\n')
+        # Encuentra el número mínimo
+        min_number = min(numbers)
 
-        # Encuentra el archivo que contenía la línea mínima y lee la siguiente línea
-        indice_min = lineas.index(linea_minima)
-        lineas[indice_min] = archivos_entrada[indice_min].readline().strip()
+        # Escribe el número mínimo en el archivo de salida
+        output_file.write(str(min_number) + '\n')
 
-    # Cierra todos los archivos
-    for archivo in archivos_entrada:
-        archivo.close()
-    salida.close()
+        # Encuentra el índice del archivo que contenía el número mínimo
+        min_index = numbers.index(min_number)
 
-# Dividir el archivo original en bloques más pequeños
-tamaño_bloque = 10**6
+        # Lee la siguiente línea del archivo correspondiente
+        lines[min_index] = file_handles[min_index].readline().strip()
+
+    # Cierra los archivos de entrada
+    for file_handle in file_handles:
+        file_handle.close()
+
+
+block1_filename = 'bloque_0.txt'
+block2_filename = 'bloque_1.txt'
+output_filename = 'resultado.txt'
+archivos = ['bloque_0.txt','bloque_1.txt','bloque_2.txt','bloque_3.txt','bloque_4.txt']
+tamaño_bloque = 1000000
 
 with open('datos.txt', 'r') as archivo_original:
     lineas = archivo_original.readlines()
     for i in range(0, len(lineas), tamaño_bloque):
         bloque = lineas[i:i + tamaño_bloque]
-        ordenamiento_por_mezcla(bloque)
+        ordenamientoRapido(bloque)
         with open(f'bloque_{i // tamaño_bloque}.txt', 'w') as archivo_bloque:
             archivo_bloque.writelines(bloque)
 
-# Obtener la lista de archivos ordenados
 archivos_ordenados = [f'bloque_{i}.txt' for i in range(len(lineas) // tamaño_bloque)]
 
-# Fusionar los archivos ordenados en uno solo
-combinar_archivos_ordenados(archivos_ordenados, 'datos.txt')
-
-# Eliminar los archivos temporales
-for archivo in archivos_ordenados:
-    os.remove(archivo)
+with open(output_filename, 'w') as output_file:
+    merge_blocks(archivos, output_file)
