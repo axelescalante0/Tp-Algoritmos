@@ -190,5 +190,5 @@ class JuegoGuerra:
 
 #------------------------------------------------------------------------------------
 
-jugar = JuegoGuerra()
-jugar.iniciar_juego()
+# jugar = JuegoGuerra()
+# jugar.iniciar_juego()
