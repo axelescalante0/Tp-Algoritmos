@@ -1,25 +1,11 @@
-#esta_vacia(): Devuelve True si la lista está vacía.
-#tamanio(): Devuelve el número de ítems de la lista.
-#agregar_al_inicio(item): Agrega un nuevo ítem al inicio de la lista.
-#agregar_al_final(item): Agrega un nuevo ítem al final de la lista.
-#insertar(item, posicion): Agrega un nuevo ítem a la lista en "posicion".
-#        Si la posición no se pasa como argumento, el ítem debe añadirse al final de la lista. "posicion"
-#        es un entero que indica la posición en la lista donde se va a insertar el nuevo elemento.
-#extraer(posicion): elimina y devuelve el ítem en "posición". Si no se indica el parámetro posición,
-#        se elimina y devuelve el último elemento de la lista.
-#copiar(): Realiza una copia de la lista elemento a elemento y devuelve la copia.
-#invertir(): Invierte el orden de los elementos de la lista.
-#ordenar(): Ordena los elementos de la lista de "menor a mayor".
-#concatenar(Lista): Recibe una lista como argumento y retorna la lista actual con la lista pasada como
-#        parámetro concatenada al final de la primera. Esta operación también debe ser posible utilizando el operador
-#        de suma ‘+’. Aclaración: No se deben modificar las listas.
-
+#--------------------------------------------------------------------------------------------------------------------
 class Nodo:
     def __init__(self,datoInicial):
         self.dato = datoInicial
         self.siguiente = None
         self.anterior = None
-
+#--------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------
 class ListaDobleEnlazada:
 
     def __init__(self):
@@ -122,13 +108,7 @@ class ListaDobleEnlazada:
             for _ in range(posicion):
                 nodo_extraer = nodo_extraer.siguiente
             dato = nodo_extraer.dato
-            # obtengo los nodos que están conectados al que quiero eliminar
-            #nodo_siguiente = nodo_extraer.siguiente
-            #nodo_anterior = nodo_extraer.anterior
-            # conecto los nodos
-            #nodo_anterior.siguiente = nodo_siguiente
-            #nodo_siguiente.anterior = nodo_anterior
-            
+
             nodo_extraer.anterior.siguiente = nodo_extraer.siguiente
             nodo_extraer.siguiente.anterior = nodo_extraer.anterior
             self.tamanio -= 1
@@ -147,9 +127,6 @@ class ListaDobleEnlazada:
                 nodo = nodo.siguiente
                 self.extraer(i+1)
 
-            # for _ in range(i):
-            #     self.extraer()
-
     def tamano(self):
         return self.tamanio
 
@@ -162,7 +139,6 @@ class ListaDobleEnlazada:
             actual = actual.siguiente
 
         return copia_lista
-
 
     def ordenar(self):
         # Primera llamada a otro metodo, pasandole la posicion 0 que será la cabeza del nodo
@@ -184,11 +160,16 @@ class ListaDobleEnlazada:
             self.ordenar_auxiliar(puntoDivision+1,ultimo)
 
     def particion(self,primero,ultimo):
+        # En esta sección, determinamos los nodos a usar como pivote, izquierda y derecha
+        # según los índices dados y la posición de los nodos en la lista.
+
+        # Si los índices son los extremos de la lista, usamos la cabeza y la cola.
         if primero == 0 and ultimo == self.tamanio-1:
             nodo_pivote = self.cabeza
             nodo_Izq = self.cabeza.siguiente
             nodo_Der = self.cola
         else:
+        # Si los índices no son los extremos, encontramos los nodos correspondientes.
             if primero < (self.tamanio/2):
                 nodo_pivote = self.cabeza
                 for _ in range(primero):
@@ -208,7 +189,6 @@ class ListaDobleEnlazada:
                 nodo_Der = self.cabeza
                 for _ in range(ultimo):
                     nodo_Der = nodo_Der.siguiente
-
         marcaIzq = primero + 1
         marcaDer = ultimo
 
@@ -242,12 +222,6 @@ class ListaDobleEnlazada:
     def __add__(self,lista):
         if self.tamanio > 0 and len(lista) > 0: 
             lista_concatenada = self.copiar()
-            # nodo_lista_1 = self.cabeza
-
-            # while nodo_lista_1 != None:
-            #     lista_concatenada.agregar_al_final(nodo_lista_1.dato)
-            #     nodo_lista_1 = nodo_lista_1.siguiente
-
             lista_concatenada.concatenar(lista)
 
             return lista_concatenada
@@ -268,3 +242,4 @@ class ListaDobleEnlazada:
             string += " "
             nodo = nodo.siguiente
         return string
+#--------------------------------------------------------------------------------------------------------------------
