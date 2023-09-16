@@ -29,125 +29,92 @@ def crear_archivo_de_datos(nombre):
                   for i in range(t)]        
         with open(nombre, 'a+') as archivo:
             archivo.writelines(bloque)
-           
+#--------------------------------------------------------------------------------------------------------------------
 crear_archivo_de_datos('datos.txt')
+#--------------------------------------------------------------------------------------------------------------------
+def split_and_store_alternate(archivo, block_size):
+    tamaño_archivo = 0
+    with open(archivo, 'r') as input_file, open("archivo_1.txt", 'a+') as file1, open("archivo_2.txt", 'a+') as file2:
+        block_count = 0  # Contador de bloques
 
-def ordenamientoRapido(unaLista):
-   ordenamientoRapidoAuxiliar(unaLista,0,len(unaLista)-1)
+        while True:
+            bloque = []
+            bloque = [int(input_file.readline().strip()) for _ in range(block_size) if input_file.readline().strip()]
 
-def ordenamientoRapidoAuxiliar(unaLista,primero,ultimo):
-   if primero<ultimo:
+            tamaño_archivo += len(bloque)
 
-       puntoDivision = particion(unaLista,primero,ultimo)
+            if not bloque:  # Verifica si el bloque está vacío
+                break  # Sale del ciclo while si llega al final del archivo
+            
+            bloque_ordenado = sorted(bloque)
 
-       ordenamientoRapidoAuxiliar(unaLista,primero,puntoDivision-1)
-       ordenamientoRapidoAuxiliar(unaLista,puntoDivision+1,ultimo)
-
-def particion(unaLista,primero,ultimo):
-   valorPivote = unaLista[primero]
-
-   marcaIzq = primero+1
-   marcaDer = ultimo
-
-   hecho = False
-   while not hecho:
-
-       while marcaIzq <= marcaDer and unaLista[marcaIzq] <= valorPivote:
-           marcaIzq = marcaIzq + 1
-
-       while unaLista[marcaDer] >= valorPivote and marcaDer >= marcaIzq:
-           marcaDer = marcaDer -1
-
-       if marcaDer < marcaIzq:
-           hecho = True
-       else:
-           temp = unaLista[marcaIzq]
-           unaLista[marcaIzq] = unaLista[marcaDer]
-           unaLista[marcaDer] = temp
-
-   temp = unaLista[primero]
-   unaLista[primero] = unaLista[marcaDer]
-   unaLista[marcaDer] = temp
-
-   return marcaDer
-
-def ordenamiento_por_mezcla(una_lista):
-    # Implementa tu función de ordenamiento por mezcla aquí
-    if len(una_lista) > 1:
-        mitad = len(una_lista) // 2
-        mitad_izquierda = una_lista[:mitad]
-        mitad_derecha = una_lista[mitad:]
-
-        ordenamiento_por_mezcla(mitad_izquierda)
-        ordenamiento_por_mezcla(mitad_derecha)
-
-        i = 0
-        j = 0
-        k = 0
-        while i < len(mitad_izquierda) and j < len(mitad_derecha):
-            if mitad_izquierda[i] < mitad_derecha[j]:
-                una_lista[k] = mitad_izquierda[i]
-                i = i + 1
+            if block_count % 2 == 0:
+                file1.writelines([str(num) + '\n' for num in bloque_ordenado])
             else:
-                una_lista[k] = mitad_derecha[j]
-                j = j + 1
-            k = k + 1
+                file2.writelines([str(num) + '\n' for num in bloque_ordenado])
 
-        while i < len(mitad_izquierda):
-            una_lista[k] = mitad_izquierda[i]
-            i = i + 1
-            k = k + 1
+            block_count += 1
 
-        while j < len(mitad_derecha):
-            una_lista[k] = mitad_derecha[j]
-            j = j + 1
-            k = k + 1
+    os.remove(archivo)
 
-def merge_blocks(input_files, output_file):
-    # Abre los archivos de entrada de los bloques
-    file_handles = [open(file, 'r') for file in input_files]
-    lines = [file.readline().strip() for file in file_handles]
+    with open(archivo, 'a+') as input_file, open("archivo_1.txt", 'r') as file1, open("archivo_2.txt", 'r') as file2:
+        line1 = file1.readline().strip()
+        line2 = file2.readline().strip()
+        while line1 and line2:
+            count_archivo_1 = 0
+            count_archivo_2 = 0
+            while (count_archivo_1 < block_size or count_archivo_2 < block_size) and (line1 and line2):
+                
+                num1 = int(line1)
+                num2 = int(line2)
 
-    while any(lines):
-        # Convierte las líneas en números enteros y omite las líneas vacías
-        numbers = [int(line) for line in lines if line]
+                # Compara y escribe el número menor en el archivo de salida
+                if num1 < num2:
+                    input_file.write(str(num1) + '\n')
+                    line1 = file1.readline().strip() # Lee la siguiente línea del primer archivo
+                    count_archivo_1 += 1
+                else:
+                    input_file.write(str(num2) + '\n')
+                    line2 = file2.readline().strip() # Lee la siguiente línea del segundo archivo
+                    count_archivo_2 += 1
+            if line1 and line2:
+                # Copiar el resto de los números si uno de los bloques se vacía
+                while count_archivo_1 <= block_size:
+                    input_file.write(line1 + '\n')
+                    line1 = file1.readline().strip()
+                    count_archivo_1 += 1
+                while count_archivo_2 <= block_size:
+                    input_file.write(line2 + '\n')
+                    line2 = file2.readline().strip()
+                    count_archivo_2 += 1
+            else:
+                break
+        while line1:
+            input_file.write(line1 + '\n')
+            line1 = file1.readline().strip()
+        while line2:
+            input_file.write(line2 + '\n')
+            line2 = file2.readline().strip()
 
-        # Si no quedan números, termina
-        if not numbers:
-            break
+    os.remove("archivo_1.txt")
+    os.remove("archivo_2.txt")
+    
+    block_size *= 2
 
-        # Encuentra el número mínimo
-        min_number = min(numbers)
+    if block_size >= tamaño_archivo:
+        return
+    # Recursividad
+    split_and_store_alternate(archivo,block_size)
+#--------------------------------------------------------------------------------------------------------------------
+def verificar_ordenamiento(nombre):
+    claves = []
+    with open(nombre, 'r') as archivo:
+        claves = [int(linea.strip()) for linea in archivo]
+    return claves == sorted(claves) 
+#--------------------------------------------------------------------------------------------------------------------
+tamaño_de_bloque = 10**6
 
-        # Escribe el número mínimo en el archivo de salida
-        output_file.write(str(min_number) + '\n')
+# Llamada a la función
+split_and_store_alternate('datos.txt', tamaño_de_bloque)
 
-        # Encuentra el índice del archivo que contenía el número mínimo
-        min_index = numbers.index(min_number)
-
-        # Lee la siguiente línea del archivo correspondiente
-        lines[min_index] = file_handles[min_index].readline().strip()
-
-    # Cierra los archivos de entrada
-    for file_handle in file_handles:
-        file_handle.close()
-
-
-block1_filename = 'bloque_0.txt'
-block2_filename = 'bloque_1.txt'
-output_filename = 'resultado.txt'
-archivos = ['bloque_0.txt','bloque_1.txt','bloque_2.txt','bloque_3.txt','bloque_4.txt']
-tamaño_bloque = 1000000
-
-with open('datos.txt', 'r') as archivo_original:
-    lineas = archivo_original.readlines()
-    for i in range(0, len(lineas), tamaño_bloque):
-        bloque = lineas[i:i + tamaño_bloque]
-        ordenamientoRapido(bloque)
-        with open(f'bloque_{i // tamaño_bloque}.txt', 'w') as archivo_bloque:
-            archivo_bloque.writelines(bloque)
-
-archivos_ordenados = [f'bloque_{i}.txt' for i in range(len(lineas) // tamaño_bloque)]
-
-with open(output_filename, 'w') as output_file:
-    merge_blocks(archivos, output_file)
+print("Ordenado -->", verificar_ordenamiento('datos.txt'))
