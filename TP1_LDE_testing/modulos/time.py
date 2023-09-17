@@ -24,7 +24,7 @@ for n in tamanios:
     tiempo_ejecucion = medir_tiempo_quick_sort(lista)
     tiempos.append(tiempo_ejecucion)
 
-plt.plot(tamanios, tiempos, marker='o', linestyle='°')
+plt.plot(tamanios, tiempos, marker='o', linestyle='-')
 plt.xlabel('Tamaño de la Lista')
 plt.ylabel('Tiempo de Ejecución (segundos)')
 plt.title('Medición de Tiempos de Ejecución del Método QuickSort')
