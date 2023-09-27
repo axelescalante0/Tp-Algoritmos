@@ -1,15 +1,63 @@
-from pythoned.arboles.monticuloBinario import MonticuloBinario
+class MonticuloBinario:
+    def __init__(self):
+        self.listaMonticulo = [0]
+        self.tamanoActual = 0
 
-miMonticulo = MonticuloBinario()
-miMonticulo.insertar(5)
-miMonticulo.insertar(7)
-miMonticulo.insertar(3)
-miMonticulo.insertar(11)
+    def infiltArriba(self,i):
+        while i // 2 > 0:
+            if self.listaMonticulo[i] < self.listaMonticulo[i // 2]:
+                tmp = self.listaMonticulo[i // 2]
+                self.listaMonticulo[i // 2] = self.listaMonticulo[i]
+                self.listaMonticulo[i] = tmp
+            i = i // 2
+    
+    def insertar(self,k):
+        self.listaMonticulo.append(k)
+        self.tamanoActual = self.tamanoActual + 1
+        self.infiltArriba(self.tamanoActual)
 
-print(miMonticulo.eliminarMin())
+    def infiltAbajo(self,i):
+        while (i * 2) <= self.tamanoActual:
+            hm = self.hijoMin(i)
+            if self.listaMonticulo[i] > self.listaMonticulo[hm]:
+                tmp = self.listaMonticulo[i]
+                self.listaMonticulo[i] = self.listaMonticulo[hm]
+                self.listaMonticulo[hm] = tmp
+            i = hm
 
-print(miMonticulo.eliminarMin())
+    def hijoMin(self,i):
+        if i * 2 + 1 > self.tamanoActual:
+            return i * 2
+        else:
+            if self.listaMonticulo[i*2] < self.listaMonticulo[i*2+1]:
+                return i * 2
+            else:
+                return i * 2 + 1
+    
+    def eliminarMin(self):
+        valorSacado = self.listaMonticulo[1]
+        self.listaMonticulo[1] = self.listaMonticulo[self.tamanoActual]
+        self.tamanoActual = self.tamanoActual - 1
+        self.listaMonticulo.pop()
+        self.infiltAbajo(1)
+        return valorSacado
+    
+    def construirMonticulo(self,unaLista):
+        i = len(unaLista) // 2
+        self.tamanoActual = len(unaLista)
+        self.listaMonticulo = [0] + unaLista[:]
+        while (i > 0):
+            self.infiltAbajo(i)
+            i = i - 1
 
-print(miMonticulo.eliminarMin())
+lista = [1,4,6,7]
 
-print(miMonticulo.eliminarMin())
+monticulo = MonticuloBinario()
+monticulo.construirMonticulo(lista)
+
+print(monticulo.eliminarMin())
+print(monticulo.tamanoActual)
+
+monticulo.insertar(20)
+print(monticulo.tamanoActual)
+
