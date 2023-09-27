@@ -6,7 +6,7 @@ class MonticuloBinario:
     def infiltArriba(self,i):
         while i // 2 > 0:
            
-            if self.listaMonticulo[i].get_riesgo < self.listaMonticulo[i // 2].get_riesgo:
+            if self.listaMonticulo[i].get_riesgo() < self.listaMonticulo[i // 2].get_riesgo():
                 tmp = self.listaMonticulo[i // 2]
                 self.listaMonticulo[i // 2] = self.listaMonticulo[i]
                 self.listaMonticulo[i] = tmp
@@ -20,7 +20,7 @@ class MonticuloBinario:
     def infiltAbajo(self,i):
         while (i * 2) <= self.tamanoActual:
             hm = self.hijoMin(i)
-            if self.listaMonticulo[i].get_riesgo > self.listaMonticulo[hm].get_riesgo:
+            if self.listaMonticulo[i].get_riesgo() > self.listaMonticulo[hm].get_riesgo():
                 tmp = self.listaMonticulo[i]
                 self.listaMonticulo[i] = self.listaMonticulo[hm]
                 self.listaMonticulo[hm] = tmp
@@ -30,7 +30,7 @@ class MonticuloBinario:
         if i * 2 + 1 > self.tamanoActual:
             return i * 2
         else:
-            if self.listaMonticulo[i*2].get_riesgo < self.listaMonticulo[i*2+1].get_riesgo:
+            if self.listaMonticulo[i*2].get_riesgo() < self.listaMonticulo[i*2+1].get_riesgo():
                 return i * 2
             else:
                 return i * 2 + 1
@@ -54,18 +54,3 @@ class MonticuloBinario:
     def __iter__(self):
         for i in range(1,len(self.listaMonticulo)):
             yield self.listaMonticulo[i]
-
-lista = [40,60,70,20,20]
-
-monticulo = MonticuloBinario()
-monticulo.construirMonticulo(lista)
-
-#print(monticulo.eliminarMin())
-print(monticulo.tamanoActual)
-
-#monticulo.insertar(20)
-print(monticulo.tamanoActual)
-
-for x in monticulo:
-    print (x)
-
