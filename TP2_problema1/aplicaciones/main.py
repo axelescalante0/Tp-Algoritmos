@@ -5,9 +5,9 @@ Sala de emergencias
 
 import time
 import datetime
-import modulos.paciente as pac
+import TP2_problema1.modulos.paciente as pac
 import random
-from monticulo import MonticuloBinario
+from TP2_problema1.modulos.monticulo import MonticuloBinario
 
 n = 20  # cantidad de ciclos de simulación
 
