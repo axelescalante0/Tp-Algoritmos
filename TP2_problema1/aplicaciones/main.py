@@ -5,7 +5,7 @@ Sala de emergencias
 
 import time
 import datetime
-import modulos.paciente as pac
+from TP2_problema1.modulos.paciente import Paciente
 import random
 from TP2_problema1.modulos.sala_emergencia import SalaEmergencia
 
@@ -23,7 +23,7 @@ for i in range(n):
 
     # Se crea un paciente un paciente por segundo
     # La criticidad del paciente es aleatoria
-    paciente = pac.Paciente()
+    paciente = Paciente()
     cola_de_espera.ingresar_paciente(paciente)
 
     # Atención de paciente en este ciclo: en el 50% de los casos
