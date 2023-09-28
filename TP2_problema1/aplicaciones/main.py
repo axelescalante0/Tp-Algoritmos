@@ -5,13 +5,13 @@ Sala de emergencias
 
 import time
 import datetime
-import TP2_problema1.modulos.paciente as pac
+import modulos.paciente as pac
 import random
-from TP2_problema1.modulos.monticulo import MonticuloBinario
+from TP2_problema1.modulos.sala_emergencia import SalaEmergencia
 
 n = 20  # cantidad de ciclos de simulación
 
-cola_de_espera = MonticuloBinario()
+cola_de_espera = SalaEmergencia()
 
 # Ciclo que gestiona la simulación
 for i in range(n):
@@ -24,12 +24,12 @@ for i in range(n):
     # Se crea un paciente un paciente por segundo
     # La criticidad del paciente es aleatoria
     paciente = pac.Paciente()
-    cola_de_espera.insertar(paciente)
+    cola_de_espera.ingresar_paciente(paciente)
 
     # Atención de paciente en este ciclo: en el 50% de los casos
     if random.random() < 0.5:
         # se atiende paciente que se encuentra al frente de la cola
-        paciente_atendido = cola_de_espera.eliminarMin()
+        paciente_atendido = cola_de_espera.atender_paciente()
         print('*'*40)
         print('Se atiende el paciente:', paciente_atendido)
         print('*'*40)
@@ -40,7 +40,7 @@ for i in range(n):
     print()
 
     # Se muestran los pacientes restantes en la cola de espera
-    print('Pacientes que faltan atenderse:', cola_de_espera.tamanoActual)
+    print('Pacientes que faltan atenderse:', cola_de_espera.total_pacientes())
     for paciente in cola_de_espera:
         print('\t', paciente)
     
@@ -48,5 +48,4 @@ for i in range(n):
     print('-*-'*15)
     
     time.sleep(1)
-
 
