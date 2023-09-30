@@ -15,3 +15,5 @@ class SalaEmergencia:
     
     def __iter__(self):
         return iter(self.monticulo)
+    
+#prueba de commit
